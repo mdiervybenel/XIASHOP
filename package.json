@@ -1,0 +1,9 @@
+{
+  "name": "xiashop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XIA SHOP - boutique en ligne avec statistiques, sondage et fichier prospects",
+  "main": "server.js",
+  "scripts": { "start": "node --no-warnings server.js" },
+  "engines": { "node": ">=22.13" }
+}
