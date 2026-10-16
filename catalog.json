@@ -133,6 +133,386 @@
    "created": 1760400006000,
    "pop": 0,
    "demo": false
+  },
+  {
+   "id": "pmatelot",
+   "name": "Coffret Matelot pour homme",
+   "brand": "Matelot",
+   "cat": "cparf-coffret",
+   "desc": "L'élégance marinière, prête à offrir.\n\nTout le rituel d'un homme soigné réuni dans un seul coffret : l'eau de parfum signature, le déodorant spray et le roll-on, rangés dans une jolie trousse de toilette rayée qu'il gardera longtemps. Anniversaire, fête des pères, remerciement : c'est le cadeau qui fait toujours plaisir.\n\n• Eau de parfum + déodorant spray + roll-on\n• Trousse de toilette marinière incluse\n• Boîte cadeau assortie, prête à offrir\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "n-matelot"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160000000
+  },
+  {
+   "id": "peros",
+   "name": "Versace Eros – Eau de toilette 100 ml",
+   "brand": "Versace",
+   "cat": "cparf-homme",
+   "desc": "La fraîcheur qui ne passe pas inaperçue.\n\nUn départ vif de menthe, de pomme verte et de citron, puis un fond chaud de vanille et de fève tonka. Eros séduit dès la première vaporisation et laisse un sillage dont on se souvient. Son flacon bleu à la Méduse en fait aussi un cadeau qui impressionne.\n\n• Parfait pour les sorties et les soirées\n• Sillage affirmé et séducteur\n• Flacon iconique, étui élégant\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "n-eros"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160001000
+  },
+  {
+   "id": "pscandal",
+   "name": "Scandal – Jean Paul Gaultier, eau de parfum 80 ml",
+   "brand": "Jean Paul Gaultier",
+   "cat": "cparf-femme",
+   "desc": "Gourmande, audacieuse, irrésistible.\n\nUn miel lumineux, une touche de fleur d'oranger et de gardénia, sur un fond de patchouli. Scandal est fait pour les femmes qui aiment qu'on se retourne sur leur passage. Son flacon couronné de jambes dorées est déjà une déclaration.\n\n• Signature miel et fleurs blanches\n• Idéal pour les soirées et les grandes occasions\n• Flacon spectaculaire, cadeau garanti\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "n-scandal"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160002000
+  },
+  {
+   "id": "pyara",
+   "name": "Yara – Lattafa, eau de parfum 100 ml",
+   "brand": "Lattafa",
+   "cat": "cparf-femme",
+   "desc": "La douceur dont tout le monde parle.\n\nCrémeux, fruité et vanillé, tendre comme un câlin : Yara est l'un des parfums orientaux les plus demandés du moment. Il se porte au quotidien comme en soirée et laisse une trace douce et sucrée qui attire les compliments.\n\n• Gourmand, doux et très féminin\n• Se porte toute la journée\n• Flacon rose et or, superbe à offrir\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "n-yara"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160003000
+  },
+  {
+   "id": "pbarakkat",
+   "name": "Barakkat Ambre Eve – Eau de parfum 100 ml",
+   "brand": "Barakkat",
+   "cat": "cparf-mixte",
+   "desc": "L'éclat de l'ambre, l'allure d'un grand parfum.\n\nFlacon carré façon cristal, étui doré gravé : Barakkat Ambre Eve a toute l'allure d'un parfum de maison de luxe. Son sillage ambré, chaud et enveloppant, plaît autant aux hommes qu'aux femmes qui veulent sentir le luxe sans se ruiner.\n\n• Sillage ambré, chaud et raffiné\n• Se porte homme ou femme\n• Présentation luxe, prête à offrir\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-barakkat"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160004000
+  },
+  {
+   "id": "pzara",
+   "name": "Zara Man – Eau de parfum 100 ml",
+   "brand": "Zara",
+   "cat": "cparf-homme",
+   "desc": "L'élégance sans effort.\n\nUn flacon noir strié, un col doré, un coffret noué d'un ruban : Zara Man a le style d'un homme sûr de lui. Au bureau, à un rendez-vous ou pour une grande occasion, c'est le parfum facile à porter qui fait toujours son effet.\n\n• Polyvalent, du matin au soir\n• Flacon sobre et chic\n• Coffret avec ruban, prêt à offrir\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-zara"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160005000
+  },
+  {
+   "id": "p24k",
+   "name": "24K Homme – Marque Collection, eau de parfum",
+   "brand": "Marque Collection",
+   "cat": "cparf-homme",
+   "desc": "L'or pur, version parfum.\n\nNoir profond et lettres dorées : 24K Homme affiche son caractère au premier regard. Le 100 ml reste à la maison, le 50 ml se glisse dans un sac ou une poche pour se parfumer partout. Le choix des hommes qui soignent chaque détail.\n\n• Deux formats : 100 ml et 50 ml\n• Look premium noir et or\n• Le 50 ml, idéal pour voyager\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "100 ml, 50 ml",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-k24"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160006000
+  },
+  {
+   "id": "p214",
+   "name": "214 – Marque Collection, eau de parfum 100 ml",
+   "brand": "Marque Collection",
+   "cat": "cparf-homme",
+   "desc": "Une signature de grande maison.\n\nColonnes, arches et dorures gravées sur un flacon noir : le 214 rend hommage aux façades des grandes maisons classiques. Un parfum de caractère pour l'homme moderne qui aime se démarquer avec classe, au travail comme le week-end.\n\n• Design noir et or remarquable\n• Parfait pour les occasions\n• Coffret assorti au flacon\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-marque214"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160007000
+  },
+  {
+   "id": "pmonark",
+   "name": "Monark – Eau de parfum",
+   "brand": "Monark",
+   "cat": "cparf-homme",
+   "desc": "Pour ceux qui règnent.\n\nUn lion couronné gravé sur un flacon noir intense : Monark est fait pour les hommes de charisme. C'est un parfum de présence, pour les soirées, les cérémonies et tous les moments où l'on veut marquer les esprits.\n\n• Flacon noir gravé, très statutaire\n• Le parfum des soirées et cérémonies\n• Coffret noir mat au lion argenté\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-monark"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160008000
+  },
+  {
+   "id": "pcocktail",
+   "name": "Cocktail Intense – Eau de parfum 100 ml",
+   "brand": "Cocktail",
+   "cat": "cparf-mixte",
+   "desc": "Une ivresse dorée, à porter sans modération.\n\nUn flacon taillé comme un verre de cristal, un jus ambré lumineux : Cocktail Intense a l'âme d'une soirée chic. Chaleureux et enveloppant, il accompagne vos sorties, vos dîners et vos nuits de fête jusqu'au bout.\n\n• Sillage chaud et intense\n• Flacon taillé spectaculaire\n• Coffret noir et or\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-cocktail"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160009000
+  },
+  {
+   "id": "pfiero",
+   "name": "Fiero Bleu Man – Eau de parfum 100 ml",
+   "brand": "Fiero",
+   "cat": "cparf-homme",
+   "desc": "Le bleu de l'homme sûr de lui.\n\nFrais, moderne et magnétique, Fiero Bleu Man se porte du matin au soir sans jamais lasser. Son flacon au dégradé violet et son étui bleu nuit séduisent dès le premier regard. Une valeur sûre pour l'homme actif.\n\n• Fraîcheur moderne, au quotidien\n• Flacon dégradé élégant\n• Excellent premier parfum ou cadeau\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-fiero"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160010000
+  },
+  {
+   "id": "pbrownorchid",
+   "name": "Brown Orchid – Eau de parfum 80 ml",
+   "brand": "Brown Orchid",
+   "cat": "cparf-mixte",
+   "desc": "Profond, chaud et sensuel.\n\nSon flacon gaufré façon cuir, noué d'un ruban, attire le regard sur n'importe quelle étagère. Brown Orchid offre un sillage profond et chaleureux, pour celles et ceux qui préfèrent les parfums de caractère aux parfums trop sages.\n\n• Sillage chaud aux accents orientaux\n• Flacon texturé, très original\n• Existe aussi en étui tube 100 ml\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-brownorchid"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160011000
+  },
+  {
+   "id": "psmart275",
+   "name": "Smart Collection N°275 – Eau de parfum 100 ml",
+   "brand": "Smart Collection",
+   "cat": "cparf-homme",
+   "desc": "L'esprit d'un grand classique, à prix doux.\n\nSmart Collection propose des parfums concentrés, inspirés des grandes références, à petit prix. Le N°275 joue une partition boisée et naturelle, chic sans être ostentatoire, pour l'homme qui aime les parfums intemporels.\n\n• Formule concentrée\n• Format généreux de 100 ml\n• Le style d'un classique, prix accessible\n\nParfum de la gamme Smart Collection, sans lien avec les marques déposées citées sur l'étui.\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-smart275"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160012000
+  },
+  {
+   "id": "porient",
+   "name": "Collection orientale – Eau de parfum 100 ml",
+   "brand": "Collection orientale",
+   "cat": "cparf-mixte",
+   "desc": "Huit parfums, huit personnalités.\n\nDans leurs étuis cylindriques décorés, ces eaux de parfum sont aussi belles à offrir qu'à collectionner. Du floral solaire de Flora by Flora au boisé intense d'Ameer Al Oud, il y a forcément celle qui vous ressemble. Choisissez votre parfum dans la liste.\n\n• 8 parfums au choix\n• Format 100 ml\n• Étuis décorés, parfaits en cadeau\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "Valour, Black Arabia, Suave, Oniro, Brown Orchid, Ameer Al Oud, L'Speason, Flora by Flora",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-orient"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160013000
+  },
+  {
+   "id": "pcannesnova",
+   "name": "Cannes Nova – Eau de parfum 50 ml (trio)",
+   "brand": "Cannes Nova",
+   "cat": "cparf-mini",
+   "desc": "Format malin, couleurs vitaminées.\n\nTrois flacons de 50 ml aux couleurs vives : turquoise et vert anis pour lui, orange flamboyant pour elle. Le bon format pour découvrir un parfum, voyager léger ou toujours en avoir un dans son sac.\n\n• 2 versions homme, 1 version femme\n• 50 ml, léger à transporter\n• Petit prix, grand effet\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "Turquoise (homme), Vert anis (homme), Orange (femme)",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-nova"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160014000
+  },
+  {
+   "id": "pbakhamel",
+   "name": "Bakhamel – Ginie Collection, eau de parfum 25 ml",
+   "brand": "Ginie Collection",
+   "cat": "cparf-mini",
+   "desc": "Le luxe en format voyage.\n\nTrois flacons carrés coiffés d'or, trois humeurs : Satin Oud, profond et velouté ; Rouge 540, lumineux et addictif ; Ambre Eve, chaud et doux. Le format 25 ml se glisse partout et permet d'offrir un parfum de prestige à petit budget.\n\n• À l'unité ou les trois ensemble\n• Idéal pour le sac ou en petit cadeau\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "Satin Oud, Rouge 540, Ambre Eve",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-bakhamel"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160015000
+  },
+  {
+   "id": "pnovam159",
+   "name": "Cannes Nova M 159 – Eau de parfum homme 50 ml",
+   "brand": "Cannes Nova",
+   "cat": "cparf-homme",
+   "desc": "Frais, aromatique, terriblement efficace.\n\nUne fougère aromatique fraîche et virile : la famille de parfums préférée des hommes qui veulent sentir bon toute la journée. Flacon carré au bouchon façon bois, étui noir et jaune : il a du style jusque dans les détails.\n\n• Famille aromatique fougère\n• 50 ml, parfait au quotidien\n\nParfum de la gamme Cannes Nova, sans lien avec les marques déposées citées sur l'étui.\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-novam159"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160016000
+  },
+  {
+   "id": "pmonogotas",
+   "name": "Monogotas – Parfum mono-note 100 ml",
+   "brand": "Monogotas",
+   "cat": "cparf-femme",
+   "desc": "Une seule note, un plaisir pur.\n\nVanille, coco, fraise ou mûre : chaque Monogotas met en avant une seule senteur gourmande, simple et reconnaissable entre mille. À porter seule pour une touche fraîche et joyeuse, ou à associer à votre parfum préféré.\n\n• 4 senteurs : Vanille, Coco, Fraise, Mûre\n• Grand format 100 ml\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "Vanille, Coco, Fraise, Mûre",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-monogotas"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160017000
+  },
+  {
+   "id": "pdovegamme",
+   "name": "Dove – Déodorant anti-transpirant 48 h (toute la gamme)",
+   "brand": "Dove",
+   "cat": "cbeau-deo",
+   "desc": "48 heures de fraîcheur, la douceur en plus.\n\nLa protection anti-transpirante 48 h, avec le soin qui a fait la réputation de Dove. Treize variantes pour toute la famille : fraîches, douces, sans parfum ou anti-traces. Choisissez la vôtre dans la liste.\n\n• Protection 48 h\n• 13 variantes au choix\n• Prix à l'unité ou par lot sur WhatsApp\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "Talco, Go Fresh concombre & thé vert, Go Fresh grenade & verveine, Sensitive (sans parfum), Cotton Dry, Beauty Finish, Invisible Dry (anti-traces), Soft Feel, Natural Touch, Original, Pure (0 % parfum), Silk Dry, Cotton Soft",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "n-dove"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160018000
+  },
+  {
+   "id": "pkenwood",
+   "name": "Blender Kenwood KE-2288 – 1,5 L avec moulin",
+   "brand": "Kenwood",
+   "cat": "celec-cuis",
+   "desc": "Jus, smoothies, glace pilée : votre cuisine passe à la vitesse supérieure.\n\nBol en verre gradué de 1,5 L, corps en inox brossé et 5 vitesses avec fonction Pulse : le KE-2288 mixe fruits, légumes et glaçons en quelques secondes. Le moulin livré en plus réduit en poudre épices, arachides ou café.\n\n• Bol en verre 1,5 L, 5 vitesses + Pulse\n• Pile les glaçons (ice crusher)\n• Moulin inclus · garantie 1 an indiquée sur la boîte\n\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "n-kenwood"
+   ],
+   "pop": 0,
+   "demo": false,
+   "created": 1792160019000
   }
  ],
  "c": [
@@ -177,6 +557,36 @@
    "name": "Cuisine",
    "parent": "celec",
    "order": 7
+  },
+  {
+   "id": "cparf-homme",
+   "name": "Parfums homme",
+   "parent": "cparf",
+   "order": 8
+  },
+  {
+   "id": "cparf-femme",
+   "name": "Parfums femme",
+   "parent": "cparf",
+   "order": 9
+  },
+  {
+   "id": "cparf-mixte",
+   "name": "Parfums mixtes",
+   "parent": "cparf",
+   "order": 10
+  },
+  {
+   "id": "cparf-coffret",
+   "name": "Coffrets cadeaux",
+   "parent": "cparf",
+   "order": 11
+  },
+  {
+   "id": "cparf-mini",
+   "name": "Petits formats",
+   "parent": "cparf",
+   "order": 12
   }
  ],
  "s": {

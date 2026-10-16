@@ -19,16 +19,62 @@ fs.mkdirSync(UP, { recursive: true });
 
 // ---------- Secret de session et mot de passe administrateur ----------
 const secretFile = path.join(DATA, '.secret');
-const SECRET = process.env.SESSION_SECRET || (fs.existsSync(secretFile) ? fs.readFileSync(secretFile, 'utf8') : (() => { const s = crypto.randomBytes(32).toString('hex'); fs.writeFileSync(secretFile, s); return s; })());
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const SECRET = process.env.SESSION_SECRET || (String(process.env.ADMIN_PASSWORD || '').trim().length >= 8 ? crypto.createHash('sha256').update('xiashop|' + String(process.env.ADMIN_PASSWORD).trim() + '|' + (process.env.SUPABASE_SERVICE_KEY || '')).digest('hex') : null) || (fs.existsSync(secretFile) ? fs.readFileSync(secretFile, 'utf8') : (() => { const s = crypto.randomBytes(32).toString('hex'); fs.writeFileSync(secretFile, s); return s; })());
+let ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || '').trim(); // espaces ou retour à la ligne collés par erreur ignorés
 if (ADMIN_PASSWORD.length < 8) {
   const pf = path.join(DATA, '.admin-password');
   ADMIN_PASSWORD = fs.existsSync(pf) ? fs.readFileSync(pf, 'utf8').trim() : (() => { const p = crypto.randomBytes(6).toString('base64url'); fs.writeFileSync(pf, p); return p; })();
   console.log('\n[XIA SHOP] ADMIN_PASSWORD absent ou trop court. Mot de passe administrateur temporaire : ' + ADMIN_PASSWORD + '\n');
 }
 
+// ---------- Stockage cloud gratuit (Supabase Storage) : sauvegarde de la base + photos ----------
+// Facultatif : sans SUPABASE_URL / SUPABASE_SERVICE_KEY, tout reste sur le disque local.
+const SB = String(process.env.SUPABASE_URL || '').trim().replace(/\/+$/, ''), SBK = String(process.env.SUPABASE_SERVICE_KEY || '').trim();
+const CLOUD = !!(SB && SBK), BK_IMG = 'xiashop-images', BK_DB = 'xiashop-backup', DBF = path.join(DATA, 'xiashop.db');
+async function sb(method, p, data, type) {
+  const h = { apikey: SBK, 'x-upsert': 'true' }; if (/^eyJ/.test(SBK)) h.Authorization = 'Bearer ' + SBK; if (type) h['Content-Type'] = type;
+  return fetch(SB + '/storage/v1/' + p, { method, headers: h, body: data });
+}
+const publicImg = (name) => SB + '/storage/v1/object/public/' + BK_IMG + '/' + encodeURIComponent(name);
+async function ensureBuckets() {
+  for (const [id, pub] of [[BK_IMG, true], [BK_DB, false]]) {
+    const r = await sb('POST', 'bucket', JSON.stringify({ id, name: id, public: pub }), 'application/json');
+    if (!r.ok) { const t = await r.text(); if (!/exist|duplicate|409/i.test(t + r.status)) throw new Error('Supabase (création du bucket ' + id + ') : ' + r.status + ' ' + t.slice(0, 200)); }
+  }
+}
+async function restoreDb() {
+  for (let i = 1; i <= 5; i++) {
+    try {
+      const r = await sb('GET', 'object/' + BK_DB + '/xiashop.db');
+      if (r.ok) { const buf = Buffer.from(await r.arrayBuffer()); for (const x of ['', '-wal', '-shm']) fs.rmSync(DBF + x, { force: true }); fs.writeFileSync(DBF, buf); console.log('[XIA SHOP] Base restaurée depuis Supabase (' + Math.round(buf.length / 1024) + ' Ko).'); return; }
+      const t = await r.text();
+      if (r.status === 404 || /not.?found/i.test(t)) { console.log('[XIA SHOP] Aucune sauvegarde Supabase : première installation.'); return; }
+      throw new Error(r.status + ' ' + t.slice(0, 200));
+    } catch (e) { console.error('[XIA SHOP] Restauration impossible (essai ' + i + '/5) : ' + e.message); await new Promise((ok) => setTimeout(ok, 3000 * i)); }
+  }
+  // Ne jamais démarrer à vide par-dessus une sauvegarde existante : on s'arrête, Render relancera.
+  console.error('[XIA SHOP] Arrêt : sauvegarde Supabase injoignable. Vérifiez SUPABASE_URL et SUPABASE_SERVICE_KEY.'); process.exit(1);
+}
+let dirty = false, saving = null, lastDaily = '';
+async function snapshot(reason) {
+  if (!CLOUD || !db) return; if (saving) return saving;
+  saving = (async () => {
+    const tmp = path.join(DATA, 'snap.db'); fs.rmSync(tmp, { force: true });
+    dirty = false; db.exec("VACUUM INTO '" + tmp.replace(/'/g, "''") + "'");
+    const buf = fs.readFileSync(tmp); fs.rmSync(tmp, { force: true });
+    const r = await sb('POST', 'object/' + BK_DB + '/xiashop.db', buf, 'application/octet-stream');
+    if (!r.ok) { dirty = true; throw new Error(r.status + ' ' + (await r.text()).slice(0, 200)); }
+    const day = new Date().toISOString().slice(0, 10);
+    if (day !== lastDaily) { lastDaily = day; await sb('POST', 'object/' + BK_DB + '/daily/' + day + '.db', buf, 'application/octet-stream'); }
+  })().catch((e) => console.error('[XIA SHOP] Sauvegarde échouée (' + reason + ') : ' + e.message)).finally(() => { saving = null; });
+  return saving;
+}
+async function putImage(name, buf, type) { if (!CLOUD) return; const r = await sb('POST', 'object/' + BK_IMG + '/' + encodeURIComponent(name), buf, type); if (!r.ok) throw Object.assign(new Error('Envoi de la photo vers Supabase impossible (' + r.status + ')'), { code: 502 }); }
+
 // ---------- Base de données ----------
-const db = new DatabaseSync(path.join(DATA, 'xiashop.db'));
+let db;
+function openDb() {
+db = new DatabaseSync(DBF);
 db.exec(`PRAGMA journal_mode=WAL;
 CREATE TABLE IF NOT EXISTS categories(id TEXT PRIMARY KEY,name TEXT NOT NULL,parent TEXT,ord INTEGER DEFAULT 0);
 CREATE TABLE IF NOT EXISTS products(id TEXT PRIMARY KEY,name TEXT NOT NULL,brand TEXT DEFAULT '',cat TEXT,descr TEXT DEFAULT '',price INTEGER DEFAULT 0,promo INTEGER,stock INTEGER,variants TEXT DEFAULT '',status TEXT DEFAULT 'draft',featured INTEGER DEFAULT 0,images TEXT DEFAULT '[]',created INTEGER);
@@ -41,6 +87,7 @@ CREATE INDEX IF NOT EXISTS ev_vid ON events(vid);
 CREATE TABLE IF NOT EXISTS leads(id TEXT PRIMARY KEY,created INTEGER,updated INTEGER,name TEXT,phone TEXT UNIQUE,city TEXT,interest TEXT,source TEXT,consent INTEGER DEFAULT 0,status TEXT DEFAULT 'nouveau',notes TEXT DEFAULT '');
 CREATE TABLE IF NOT EXISTS survey_responses(id INTEGER PRIMARY KEY AUTOINCREMENT,ts INTEGER,vid TEXT,answers TEXT,lead_id TEXT);
 CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,ts INTEGER,product TEXT,name TEXT,rating INTEGER,text TEXT,status TEXT DEFAULT 'pending',vid TEXT);`);
+}
 
 const q = (sql) => db.prepare(sql);
 const J = (s, d) => { try { return s == null ? d : JSON.parse(s); } catch (e) { return d; } };
@@ -62,10 +109,12 @@ const DEFAULT_SURVEY = {
 };
 
 // ---------- Catalogue de départ ----------
+async function seedDb() {
 if (!q('SELECT COUNT(*) n FROM categories').get().n && !q('SELECT COUNT(*) n FROM products').get().n && !getSet('seeded', 0)) {
   const seed = J(fs.readFileSync(SEED_JSON, 'utf8'), null);
   if (seed) {
     const img = (k) => { const f = 'seed-' + k + '.jpg'; fs.copyFileSync(seedImg(k), path.join(UP, f)); return '/uploads/' + f; };
+    for (const k of ['logo'].concat(...seed.p.map((p) => p.images))) { if (CLOUD) await putImage('seed-' + k + '.jpg', fs.readFileSync(seedImg(k)), 'image/jpeg'); }
     for (const c of seed.c) q('INSERT INTO categories VALUES(?,?,?,?)').run(c.id, c.name, c.parent || null, c.order || 0);
     for (const p of seed.p) q('INSERT INTO products(id,name,brand,cat,descr,price,promo,stock,variants,status,featured,images,created) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
       .run(p.id, p.name, p.brand || '', p.cat, p.desc || '', p.price || 0, p.promo || null, p.stock == null ? null : p.stock, p.variants || '', p.status || 'published', p.featured ? 1 : 0, JSON.stringify(p.images.map(img)), p.created || Date.now());
@@ -76,6 +125,43 @@ if (!q('SELECT COUNT(*) n FROM categories').get().n && !q('SELECT COUNT(*) n FRO
   }
 }
 if (!getSet('survey', null)) putSet('survey', DEFAULT_SURVEY);
+await syncSeed();
+}
+// Nouveautés du catalogue de départ : ajoutées une seule fois, sans toucher aux produits existants
+// ni recréer un produit ou une catégorie que le vendeur a supprimé.
+const FIRST_SEED = { p: ['pinvicto', 'pnova', 'psol', 'pdove1', 'pdove2', 'pblender', 'pfryer'], c: ['cparf', 'cparf-edp', 'cparf-mist', 'cbeau', 'cbeau-deo', 'celec', 'celec-cuis'] };
+async function syncSeed() {
+  const seed = J(fs.readFileSync(SEED_JSON, 'utf8'), null); if (!seed) return;
+  const done = getSet('seedDone', null) || { p: FIRST_SEED.p.slice(), c: FIRST_SEED.c.slice() };
+  let addedP = 0, addedC = 0;
+  for (const c of seed.c) {
+    if (done.c.includes(c.id)) continue;
+    if (!q('SELECT 1 FROM categories WHERE id=?').get(c.id)) {
+      const par = c.parent && q('SELECT 1 FROM categories WHERE id=?').get(c.parent) ? c.parent : null;
+      q('INSERT INTO categories VALUES(?,?,?,?)').run(c.id, c.name, par, c.order || 0); addedC++;
+    }
+    done.c.push(c.id);
+  }
+  for (const p of seed.p) {
+    if (done.p.includes(p.id)) continue;
+    if (!q('SELECT 1 FROM products WHERE id=?').get(p.id)) {
+      const imgs = [];
+      for (const k of p.images) {
+        const src = seedImg(k); if (!fs.existsSync(src)) { console.warn('[XIA SHOP] Photo manquante : ' + k + '.jpg'); continue; }
+        const fn = 'seed-' + k + '.jpg'; fs.copyFileSync(src, path.join(UP, fn));
+        if (CLOUD) await putImage(fn, fs.readFileSync(src), 'image/jpeg');
+        imgs.push('/uploads/' + fn);
+      }
+      const cat = q('SELECT 1 FROM categories WHERE id=?').get(p.cat) ? p.cat : 'cparf';
+      q('INSERT INTO products(id,name,brand,cat,descr,price,promo,stock,variants,status,featured,images,created) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+        .run(p.id, p.name, p.brand || '', cat, p.desc || '', p.price || 0, p.promo || null, p.stock == null ? null : p.stock, p.variants || '', p.status || 'published', p.featured ? 1 : 0, JSON.stringify(imgs), p.created || Date.now());
+      addedP++;
+    }
+    done.p.push(p.id);
+  }
+  putSet('seedDone', done);
+  if (addedP || addedC) { dirty = true; console.log('[XIA SHOP] Nouveautés importées : ' + addedP + ' produit(s), ' + addedC + ' catégorie(s).'); }
+}
 
 // ---------- Outils HTTP ----------
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.json': 'application/json' };
@@ -279,12 +365,12 @@ function surveyResults() {
 const csvCell = (v) => { let s = String(v == null ? '' : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
 
 // ---------- Images (envoyées en base64 par l'administration, déjà redimensionnées) ----------
-function saveImage(dataUrl) {
+async function saveImage(dataUrl) {
   const m = /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUrl || ''));
   if (!m) throw Object.assign(new Error('Image invalide (JPEG, PNG ou WebP)'), { code: 400 });
   const buf = Buffer.from(m[2], 'base64'); if (buf.length > 4 * 1024 * 1024) throw Object.assign(new Error('Image trop lourde (4 Mo max)'), { code: 413 });
   const f = crypto.randomBytes(10).toString('hex') + '.' + (m[1] === 'jpeg' ? 'jpg' : m[1]);
-  fs.writeFileSync(path.join(UP, f), buf); return '/uploads/' + f;
+  fs.writeFileSync(path.join(UP, f), buf); await putImage(f, buf, 'image/' + m[1]); return '/uploads/' + f;
 }
 
 // ---------- Routeur ----------
@@ -342,7 +428,7 @@ async function api(req, res, url) {
   // ---- Administration ----
   if (p === '/api/admin/login' && m === 'POST') {
     if (limited(req, 'lg', 10, 15 * 60e3)) return bad(res, 'Trop de tentatives, réessayez dans 15 minutes', 429);
-    const b = await body(req, 2e3), a = crypto.createHash('sha256').update(String(b.password || '')).digest(), e = crypto.createHash('sha256').update(ADMIN_PASSWORD).digest();
+    const b = await body(req, 2e3), a = crypto.createHash('sha256').update(String(b.password || '').trim()).digest(), e = crypto.createHash('sha256').update(ADMIN_PASSWORD).digest();
     if (!crypto.timingSafeEqual(a, e)) return bad(res, 'Mot de passe incorrect', 401);
     return send(res, 200, { ok: true }, null, { 'Set-Cookie': 'xs=' + makeToken() + '; Path=/; HttpOnly; SameSite=Strict; Max-Age=604800' + (secure(req) ? '; Secure' : '') });
   }
@@ -374,7 +460,7 @@ async function api(req, res, url) {
   if (seg[0] === 'leads' && seg[1] && m === 'DELETE') { q('UPDATE visitors SET lead_id=NULL WHERE lead_id=?').run(seg[1]); q('UPDATE orders SET lead_id=NULL WHERE lead_id=?').run(seg[1]); q('UPDATE survey_responses SET lead_id=NULL WHERE lead_id=?').run(seg[1]); q('DELETE FROM leads WHERE id=?').run(seg[1]); return ok(res); }
   if (r === 'orders' && m === 'GET') return ok(res, q('SELECT * FROM orders ORDER BY created DESC LIMIT 500').all().map((o) => Object.assign({}, o, { lines: J(o.lines, []) })));
   if (seg[0] === 'orders' && seg[1] && m === 'PATCH') { const b = await body(req, 2e3); if (!ORDER_ST.includes(b.status)) return bad(res, 'Statut invalide'); q('UPDATE orders SET status=? WHERE id=?').run(b.status, seg[1]); return ok(res); }
-  if (r === 'upload' && m === 'POST') { const b = await body(req, 7e6); return ok(res, { url: saveImage(b.data) }); }
+  if (r === 'upload' && m === 'POST') { const b = await body(req, 7e6); return ok(res, { url: await saveImage(b.data) }); }
   if (seg[0] === 'products' && (m === 'POST' || m === 'PUT')) {
     const b = await body(req, 50e3), id = m === 'POST' ? nid('p') : str(seg[1], 40), old = q('SELECT * FROM products WHERE id=?').get(id);
     if (m === 'PUT' && !old) return bad(res, 'Produit introuvable', 404);
@@ -428,12 +514,12 @@ function serveFile(res, file, cache) {
   });
 }
 
-http.createServer(async (req, res) => {
+const server = http.createServer(async (req, res) => {
   let url; try { url = new URL(req.url, 'http://x'); } catch (e) { return send(res, 400, 'Requête invalide', 'text/plain'); }
   const p = decodeURIComponent(url.pathname);
   try {
-    if (p.startsWith('/api/')) return await api(req, res, url);
-    if (p.startsWith('/uploads/')) { const f = path.join(UP, path.basename(p)); return serveFile(res, f, 'public, max-age=2592000, immutable'); }
+    if (p.startsWith('/api/')) { if (req.method !== 'GET') dirty = true; return await api(req, res, url); }
+    if (p.startsWith('/uploads/')) { const n = path.basename(p); if (CLOUD) return send(res, 302, '', 'text/plain', { Location: publicImg(n), 'Cache-Control': 'public, max-age=86400' }); return serveFile(res, path.join(UP, n), 'public, max-age=2592000, immutable'); }
     if (p === '/admin' || p === '/admin/' || p === '/admin.html') return serveFile(res, PAGE.admin);
     if (p === '/healthz') return send(res, 200, 'ok', 'text/plain');
     return serveFile(res, PAGE.index);
@@ -441,4 +527,15 @@ http.createServer(async (req, res) => {
     if (!e.code || typeof e.code !== 'number') console.error(e);
     if (!res.headersSent) bad(res, typeof e.code === 'number' ? e.message : 'Erreur serveur', typeof e.code === 'number' ? e.code : 500);
   }
-}).listen(PORT, () => console.log('[XIA SHOP] En ligne sur le port ' + PORT));
+});
+
+(async function main() {
+  if (CLOUD) { console.log('[XIA SHOP] Mode cloud : sauvegarde Supabase activée.'); await ensureBuckets(); await restoreDb(); }
+  else console.log('[XIA SHOP] Mode local : données dans ' + DATA);
+  openDb(); await seedDb(); if (CLOUD) await snapshot('démarrage');
+  server.listen(PORT, () => console.log('[XIA SHOP] En ligne sur le port ' + PORT));
+  if (CLOUD) setInterval(() => { if (dirty) snapshot('auto'); }, 60e3).unref();
+  let stopping = false;
+  const stop = async (sig) => { if (stopping) return; stopping = true; console.log('[XIA SHOP] Arrêt (' + sig + '), sauvegarde finale…'); server.close(); try { await snapshot('arrêt'); } catch (e) {} process.exit(0); };
+  process.on('SIGTERM', () => stop('SIGTERM')); process.on('SIGINT', () => stop('SIGINT'));
+})().catch((e) => { console.error('[XIA SHOP] Démarrage impossible : ' + e.message); process.exit(1); });
