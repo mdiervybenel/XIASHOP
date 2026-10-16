@@ -1,0 +1,189 @@
+{
+ "p": [
+  {
+   "id": "pinvicto",
+   "name": "Invicto Legend – Eau de parfum 100 ml",
+   "brand": "Invicto",
+   "cat": "cparf-edp",
+   "desc": "Eau de parfum en vaporisateur, flacon de 100 ml (3,4 FL.OZ) dans un coffret bleu et argent orné d'ailes.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "invicto"
+   ],
+   "created": 1760400000000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "pnova",
+   "name": "Nova – Eau de parfum W 250 Scandal (Chypré floral)",
+   "brand": "Janeiro Fragrance",
+   "cat": "cparf-edp",
+   "desc": "Eau de parfum en vaporisateur, parfum longue tenue de famille chypré floral (référence W 250 Scandal), présenté dans un coffret jaune et noir.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "nova",
+    "sol"
+   ],
+   "created": 1760400001000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "psol",
+   "name": "Sol de Janeiro Cheirosa – Brazilian Crush Perfume Mist",
+   "brand": "Sol de Janeiro",
+   "cat": "cparf-mist",
+   "desc": "Brume parfumée Brazilian Crush de la collection Cheirosa, disponible en quatre parfums numérotés. Choisissez votre numéro à la commande.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "N° 68 (rose), N° 40 (rouge), N° 62 (orange), N° 59 (bleu)",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "sol"
+   ],
+   "created": 1760400002000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "pdove1",
+   "name": "Dove Nourishing Secrets Restoring Ritual – Déodorant anti-transpirant 48 h",
+   "brand": "Dove",
+   "cat": "cbeau-deo",
+   "desc": "Déodorant anti-transpirant en spray, protection 48 h, parfum noix de coco et fleur de jasmin, 0 % alcool.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "dove"
+   ],
+   "created": 1760400003000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "pdove2",
+   "name": "Dove Go Fresh – Déodorant anti-transpirant crème hydratante 48 h",
+   "brand": "Dove",
+   "cat": "cbeau-deo",
+   "desc": "Déodorant anti-transpirant en spray, protection 48 h, parfum concombre et thé vert avec crème hydratante, testé dermatologiquement, 0 % alcool.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": false,
+   "images": [
+    "dove"
+   ],
+   "created": 1760400004000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "pblender",
+   "name": "Blender avec moulin Kitchen Deluxe 600 W",
+   "brand": "Kitchen Deluxe",
+   "cat": "celec-cuis",
+   "desc": "Blender 600 W avec bol en verre gradué (1,5 L) et moulin à épices/grains, socle en inox brossé, variateur de vitesse et touche Pulse.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "blender"
+   ],
+   "created": 1760400005000,
+   "pop": 0,
+   "demo": false
+  },
+  {
+   "id": "pfryer",
+   "name": "Friteuse à air Kitchen Deluxe",
+   "brand": "Kitchen Deluxe",
+   "cat": "celec-cuis",
+   "desc": "Friteuse à air noire avec écran numérique, bouton de réglage et tiroir-panier amovible, pour cuisiner avec moins d'huile.\nPrix et disponibilité à confirmer sur WhatsApp.",
+   "price": 0,
+   "promo": null,
+   "stock": null,
+   "variants": "",
+   "status": "published",
+   "featured": true,
+   "images": [
+    "fryer"
+   ],
+   "created": 1760400006000,
+   "pop": 0,
+   "demo": false
+  }
+ ],
+ "c": [
+  {
+   "id": "cparf",
+   "name": "Parfums",
+   "parent": null,
+   "order": 1
+  },
+  {
+   "id": "cparf-edp",
+   "name": "Eaux de parfum",
+   "parent": "cparf",
+   "order": 2
+  },
+  {
+   "id": "cparf-mist",
+   "name": "Brumes parfumées",
+   "parent": "cparf",
+   "order": 3
+  },
+  {
+   "id": "cbeau",
+   "name": "Beauté & soins",
+   "parent": null,
+   "order": 4
+  },
+  {
+   "id": "cbeau-deo",
+   "name": "Déodorants",
+   "parent": "cbeau",
+   "order": 5
+  },
+  {
+   "id": "celec",
+   "name": "Électroménager",
+   "parent": null,
+   "order": 6
+  },
+  {
+   "id": "celec-cuis",
+   "name": "Cuisine",
+   "parent": "celec",
+   "order": 7
+  }
+ ],
+ "s": {
+  "wa": "242064849262",
+  "ship": [],
+  "pay": "",
+  "ann": "Commande simple sur WhatsApp · Livraison et paiement : à confirmer avec la boutique",
+  "logo": "logo"
+ }
+}
