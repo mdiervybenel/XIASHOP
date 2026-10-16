@@ -68,7 +68,7 @@ var P=[],C=[],S={wa:'242064849262',ship:[],pay:'',ann:'',logo:'',social:{},pages
 var flt={q:'',max:'',av:false,sort:'new',n:12},cur={},RV={};
 function ld(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 var cart=ld('xc',[]),fav=ld('xf',[]);
-var $=function(s){return document.querySelector(s)},esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var V=function(u){u=String(u||'');return u.indexOf('/uploads/')===0&&u.indexOf('?')<0?u+'?v=3':u};var $=function(s){return document.querySelector(s)},esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var fmt=function(n){return Number(n||0).toLocaleString('fr-FR').replace(/[  ]/g,' ')+' FCFA'};
 function toast(t){var e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none'},3500)}
 async function api(u,b){var r=await fetch(u,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{});var j=await r.json().catch(function(){return{}});if(!r.ok)throw new Error(j.error||'Erreur réseau');return j}
@@ -98,7 +98,7 @@ var cn=function(id){var c=C.find(function(x){return x.id===id});return c?c.name:
 var kids=function(id){return C.filter(function(c){return c.parent===id}).map(function(c){return c.id})};
 var inCat=function(p,id){return p.cat===id||kids(id).indexOf(p.cat)>-1};
 var ok=function(p){return p.status==='published'&&!(p.stock===0)};
-function im(p,i){var s=p.images&&p.images[i||0];return s?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(s)+'">':'<span>XIA</span>'}
+function im(p,i){var s=p.images&&p.images[i||0];return s?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(V(s))+'">':'<span>XIA</span>'}
 function pr(p){if(!hp(p))return '<span style="color:#666;font-weight:400">Prix à confirmer</span>';return eff(p)<p.price?fmt(eff(p))+'<s>'+fmt(p.price)+'</s>':fmt(p.price)}
 function stars(n){n=Math.round(n||0);return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
 function waU(m){return 'https://wa.me/'+String(S.wa||'242064849262').replace(/\D/g,'')+'?text='+encodeURIComponent(m)}
@@ -117,7 +117,7 @@ async function sendLead(ctx,interest){var g=function(k){var e=$('#'+k+'_'+ctx);r
 function home(){var v=pub(),f=v.filter(function(p){return p.featured}),n=v.slice().sort(function(a,b){return(b.created||0)-(a.created||0)}).slice(0,4),o=v.filter(function(p){return hp(p)&&eff(p)<p.price}),h=f[0]||v[0];
  var tr=v.filter(function(p){return p.pop>0}).sort(function(a,b){return b.pop-a.pop}).slice(0,4);
  var cs=C.filter(function(c){return !c.parent&&v.some(function(p){return inCat(p,c.id)})});
- return '<div class="hero"><div>'+(S.logo?'<img class="lg" alt="XIA SHOP" src="'+esc(S.logo)+'">':'')+'<h1>Le style, la qualité et le choix à portée de main.</h1><p>Parfums, beauté et électroménager. Commandez simplement, avec un accompagnement direct sur WhatsApp.</p><a class="btn g" href="#/all">Découvrir la boutique</a> <a class="btn o" href="#/promo">Voir les promotions</a></div>'+(h&&h.images&&h.images[0]?'<img class="hp" alt="'+esc(h.name)+'" src="'+esc(h.images[0])+'">':'')+'</div>'
+ return '<div class="hero"><div>'+(S.logo?'<img class="lg" alt="XIA SHOP" src="'+esc(V(S.logo))+'">':'')+'<h1>Le style, la qualité et le choix à portée de main.</h1><p>Parfums, beauté et électroménager. Commandez simplement, avec un accompagnement direct sur WhatsApp.</p><a class="btn g" href="#/all">Découvrir la boutique</a> <a class="btn o" href="#/promo">Voir les promotions</a></div>'+(h&&h.images&&h.images[0]?'<img class="hp" alt="'+esc(h.name)+'" src="'+esc(V(h.images[0]))+'">':'')+'</div>'
  +(cs.length?'<h2>Nos catégories</h2><div class="cats">'+cs.map(function(c){return '<a href="#/c/'+c.id+'">'+esc(c.name)+'</a>'}).join('')+'</div>':'')
  +(v.length?'':'<div class="nt">Aucun produit publié pour le moment.</div>')
  +sec('Produits populaires',f.slice(0,8))+sec('Les plus consultés cette semaine',tr)+sec('Nos nouveautés',n)+sec('Nos meilleures offres',o.slice(0,8))
@@ -136,7 +136,7 @@ function prod(id){var p=P.find(function(x){return x.id===id});if(!p)return ready
  var vs=(p.variants||'').split(',').map(function(s){return s.trim()}).filter(Boolean),sim=pub().filter(function(x){return x.id!==p.id&&x.cat===p.cat}).slice(0,4);
  var st=p.stock==null?'Disponibilité à confirmer sur WhatsApp':p.stock>0?'En stock'+(p.stock<=5?' (plus que '+p.stock+' !)':''):'Indisponible';
  var rv=RV[p.id];if(!rv){RV[p.id]='l';api('/api/reviews?product='+encodeURIComponent(p.id)).then(function(r){RV[p.id]=r;if(R==='#/p/'+p.id)render()}).catch(function(){RV[p.id]=[]})}
- return '<div class="pg"><div><div class="im" id="mi" style="border-radius:12px">'+im(p,0)+'</div><div class="th">'+(p.images||[]).map(function(s,i){return '<img alt="" src="'+esc(s)+'" onclick="sm(\''+p.id+'\','+i+')">'}).join('')+'</div></div>'
+ return '<div class="pg"><div><div class="im" id="mi" style="border-radius:12px">'+im(p,0)+'</div><div class="th">'+(p.images||[]).map(function(s,i){return '<img alt="" src="'+esc(V(s))+'" onclick="sm(\''+p.id+'\','+i+')">'}).join('')+'</div></div>'
  +'<div><small>'+esc(p.brand)+' · '+esc(cn(p.cat))+'</small><h1 style="margin:4px 0;font-size:clamp(22px,5vw,32px);line-height:1.2">'+esc(p.name)+'</h1>'+(p.rating?'<div class="st">'+stars(p.rating.avg)+' <small>'+p.rating.avg+'/5 · '+p.rating.n+' avis</small></div>':'')+(p.pop>=5?'<p style="margin:4px 0;color:#b00020;font-size:14px">🔥 Consulté '+p.pop+' fois ce mois-ci</p>':'')
  +'<div class="big">'+pr(p)+'</div><p><b>'+st+'</b></p><p style="white-space:pre-line">'+esc(p.desc)+'</p>'
  +(vs.length?'<label>Variante <select id="pv">'+vs.map(function(v){return '<option>'+esc(v)+'</option>'}).join('')+'</select></label> ':'')
@@ -196,7 +196,7 @@ function render(nav){var r=(R||'#/').slice(2).split('?')[0].split('/'),v,k=r[0];
  $('#app').innerHTML=v;$('#cc').textContent=cart.reduce(function(a,l){return a+l.q},0);$('#ann').textContent=S.ann||'';$('#ann').style.display=S.ann?'block':'none';
  var w=waU('Bonjour XIA SHOP,');$('#fw').href=w;$('#fwa').href=w;$('#fwa').textContent='WhatsApp : +'+String(S.wa).replace(/^(\d{3})(\d{2})(\d{3})(\d{4})$/,'$1 $2 $3 $4');
  var so=S.social||{};$('#soc').innerHTML=['facebook','instagram','tiktok'].filter(function(x){return so[x]}).map(function(x){return '<a target="_blank" rel="noopener" href="'+esc(so[x])+'">'+x.charAt(0).toUpperCase()+x.slice(1)+'</a>'}).join('');
- $('#lg').innerHTML=S.logo?'<img alt="XIA SHOP" src="'+esc(S.logo)+'"><span>XIA SHOP</span>':'XIA SHOP';nvh();
+ $('#lg').innerHTML=S.logo?'<img alt="XIA SHOP" src="'+esc(V(S.logo))+'"><span>XIA SHOP</span>':'XIA SHOP';nvh();
  var pp=k==='p'&&P.find(function(x){return x.id===r[1]});document.title=(pp?pp.name+' – ':'')+'XIA SHOP';
  if(nav&&ready){T('view');if(pp)T('product',{product:pp.id});views++;if(views===3)setTimeout(maybeSurvey,1500)}}
 var views=0;

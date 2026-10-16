@@ -519,9 +519,27 @@ const server = http.createServer(async (req, res) => {
   const p = decodeURIComponent(url.pathname);
   try {
     if (p.startsWith('/api/')) { if (req.method !== 'GET') dirty = true; return await api(req, res, url); }
-    if (p.startsWith('/uploads/')) { const n = path.basename(p); if (CLOUD) return send(res, 302, '', 'text/plain', { Location: publicImg(n), 'Cache-Control': 'public, max-age=86400' }); return serveFile(res, path.join(UP, n), 'public, max-age=2592000, immutable'); }
+    if (p.startsWith('/uploads/')) {
+      const n = path.basename(p), f = path.join(UP, n);
+      if (!/^[\w.-]+$/.test(n)) return send(res, 404, 'Introuvable', 'text/plain; charset=utf-8');
+      if (!fs.existsSync(f) && CLOUD) {
+        // Photo absente du disque (redémarrage) : on la récupère dans Supabase avec la clé, puis on la garde en cache
+        const r = await sb('GET', 'object/' + BK_IMG + '/' + encodeURIComponent(n));
+        if (!r.ok) { console.warn('[XIA SHOP] Photo introuvable dans Supabase : ' + n + ' (' + r.status + ')'); return send(res, 404, 'Introuvable', 'text/plain; charset=utf-8'); }
+        fs.writeFileSync(f, Buffer.from(await r.arrayBuffer()));
+      }
+      return serveFile(res, f, 'public, max-age=2592000, immutable');
+    }
     if (p === '/admin' || p === '/admin/' || p === '/admin.html') return serveFile(res, PAGE.admin);
-    if (p === '/healthz') return send(res, 200, 'ok', 'text/plain');
+    if (p === '/healthz') {
+      const n = url.searchParams.get('img');
+      if (!n) return send(res, 200, 'ok', 'text/plain');
+      // Diagnostic d'une photo (aucune donnée sensible) : mode, présence locale, réponse de Supabase
+      if (!/^[\w.-]+$/.test(n)) return bad(res, 'Nom invalide');
+      const out = { mode: CLOUD ? 'cloud' : 'local', local: fs.existsSync(path.join(UP, n)), produits: q('SELECT COUNT(*) n FROM products').get().n };
+      if (CLOUD) { try { const r = await sb('GET', 'object/' + BK_IMG + '/' + encodeURIComponent(n)); out.supabase = r.status; if (!r.ok) out.detail = (await r.text()).slice(0, 160); } catch (e) { out.supabase = 'erreur : ' + e.message; } }
+      return ok(res, out);
+    }
     return serveFile(res, PAGE.index);
   } catch (e) {
     if (!e.code || typeof e.code !== 'number') console.error(e);
