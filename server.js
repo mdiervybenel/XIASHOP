@@ -6,6 +6,12 @@ const path = require('path');
 const crypto = require('crypto');
 const { DatabaseSync } = require('node:sqlite');
 
+// Trouve un fichier du projet, qu'il soit rangé dans son dossier ou envoyé à plat à la racine
+const find = (...c) => c.map((x) => path.join(__dirname, x)).find((x) => fs.existsSync(x)) || path.join(__dirname, c[0]);
+const PAGE = { index: find('public/index.html', 'index.html'), admin: find('public/admin.html', 'admin.html') };
+const SEED_JSON = find('seed/catalog.json', 'catalog.json');
+const seedImg = (k) => find('seed/img/' + k + '.jpg', 'seed/' + k + '.jpg', k + '.jpg');
+
 const PORT = +process.env.PORT || 3000;
 const DATA = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
 const UP = path.join(DATA, 'uploads');
@@ -57,9 +63,9 @@ const DEFAULT_SURVEY = {
 
 // ---------- Catalogue de départ ----------
 if (!q('SELECT COUNT(*) n FROM categories').get().n && !q('SELECT COUNT(*) n FROM products').get().n && !getSet('seeded', 0)) {
-  const seed = J(fs.readFileSync(path.join(__dirname, 'seed', 'catalog.json'), 'utf8'), null);
+  const seed = J(fs.readFileSync(SEED_JSON, 'utf8'), null);
   if (seed) {
-    const img = (k) => { const f = 'seed-' + k + '.jpg'; fs.copyFileSync(path.join(__dirname, 'seed', 'img', k + '.jpg'), path.join(UP, f)); return '/uploads/' + f; };
+    const img = (k) => { const f = 'seed-' + k + '.jpg'; fs.copyFileSync(seedImg(k), path.join(UP, f)); return '/uploads/' + f; };
     for (const c of seed.c) q('INSERT INTO categories VALUES(?,?,?,?)').run(c.id, c.name, c.parent || null, c.order || 0);
     for (const p of seed.p) q('INSERT INTO products(id,name,brand,cat,descr,price,promo,stock,variants,status,featured,images,created) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
       .run(p.id, p.name, p.brand || '', p.cat, p.desc || '', p.price || 0, p.promo || null, p.stock == null ? null : p.stock, p.variants || '', p.status || 'published', p.featured ? 1 : 0, JSON.stringify(p.images.map(img)), p.created || Date.now());
@@ -422,18 +428,15 @@ function serveFile(res, file, cache) {
   });
 }
 
-const PUB = path.join(__dirname, 'public');
 http.createServer(async (req, res) => {
   let url; try { url = new URL(req.url, 'http://x'); } catch (e) { return send(res, 400, 'Requête invalide', 'text/plain'); }
   const p = decodeURIComponent(url.pathname);
   try {
     if (p.startsWith('/api/')) return await api(req, res, url);
     if (p.startsWith('/uploads/')) { const f = path.join(UP, path.basename(p)); return serveFile(res, f, 'public, max-age=2592000, immutable'); }
-    if (p === '/admin' || p === '/admin/') return serveFile(res, path.join(PUB, 'admin.html'));
+    if (p === '/admin' || p === '/admin/' || p === '/admin.html') return serveFile(res, PAGE.admin);
     if (p === '/healthz') return send(res, 200, 'ok', 'text/plain');
-    const f = path.join(PUB, path.normalize(p).replace(/^(\.\.[/\\])+/, ''));
-    if (f.startsWith(PUB) && p !== '/' && fs.existsSync(f) && fs.statSync(f).isFile()) return serveFile(res, f, 'public, max-age=3600');
-    return serveFile(res, path.join(PUB, 'index.html'));
+    return serveFile(res, PAGE.index);
   } catch (e) {
     if (!e.code || typeof e.code !== 'number') console.error(e);
     if (!res.headersSent) bad(res, typeof e.code === 'number' ? e.message : 'Erreur serveur', typeof e.code === 'number' ? e.code : 500);
